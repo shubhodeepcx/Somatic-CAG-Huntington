@@ -1,0 +1,40 @@
+{
+  "fitted": {
+    "A": 0.2944391171316897,
+    "beta": 0.006151549496444519,
+    "L50": 400.0,
+    "R": 17.66643283432489,
+    "L_sw": 80.22643964436762,
+    "w_sw": 6.0,
+    "lambda40": 0.06959789430043399,
+    "Ls": null,
+    "cost": 6.162975822039155e-33
+  },
+  "derived": {
+    "alpha_kcal_per_mol_per_repeat": 0.0036,
+    "lambda_at_40": 0.0696,
+    "lambda_at_150": 8.117
+  },
+  "interpretation": {
+    "A": "events per year per MutSbeta site at unit slip-out occupancy",
+    "beta": "d(dG_slip)/dL divided by RT, per repeat unit",
+    "R": "fold rise in expansion probability for a clustered vs isolated slip-out",
+    "L_sw": "tract length at which half of slip-outs are clustered"
+  },
+  "assumed_structural_constants": {
+    "L50_ceiling": 400.0,
+    "w_switch": 6.0,
+    "L_switch": 80.0,
+    "R_cluster": 10.0,
+    "L_death_50": 300.0,
+    "death_width": 40.0,
+    "h_death_max": 6.0,
+    "contraction_ratio": 0.1,
+    "contraction_step": 2.0,
+    "L_max": 1000.0
+  },
+  "best_msh3_binding_order": {
+    "binding_order_k": 1.0,
+    "rmse_vs_published_regression": 4.97
+  }
+}

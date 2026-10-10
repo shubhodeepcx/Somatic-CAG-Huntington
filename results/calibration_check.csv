@@ -1,0 +1,7 @@
+quantity,published,model,role
+mean time 40->60 CAG (y),50.0,50.0,calibration
+mean time 60->80 CAG (y),12.0,12.0,calibration
+mean time 80->150 CAG (y),4.0,4.0,calibration
+lambda(90)/lambda(70),>=6,6.0,calibration
+"max lambda, 36-55 CAG (events/cell/y)",<1,0.1269,held-out
+mean time 150->350 CAG (months),"months, not decades",32.5,held-out

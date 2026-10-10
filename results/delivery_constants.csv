@@ -1,0 +1,12 @@
+constant,value,role
+mouse_brain_g,0.4,assumed scaling constant
+human_brain_g,1300.0,assumed scaling constant
+human_striatum_g,20.0,assumed scaling constant
+human_plasma_volume_L,3.0,assumed scaling constant
+EC50_nmol_per_g,10.12,fitted to mouse ICV dose-response
+Hill,1.215,fitted to mouse ICV dose-response
+Lpen_mm,3.909,inferred from NHP regional gradient
+KD_b_nM,286.41,fitted to AuNP affinity series
+K_r_nM,64.07,fitted to AuNP affinity series
+KD_optimal_nM,135.46,derived
+valency_factor_bivalent,0.174,from AuNP data

@@ -1,0 +1,3 @@
+model,rate_multiplier_g,implied_t_40_60_y,implied_t_60_80_y,implied_t_80_150_y,mean_loss_at_CAP600_pct,age_50pct_loss_CAG42,age_50pct_loss_CAG46,frac_life_below_150_CAG42_pct,ranen_onset_CAG42
+M1_dwell_faithful,1.0,50.0,12.0,4.0,43.2,72.1,58.0,97.6,46.4
+M2_loss_faithful,1.962,25.5,6.1,2.04,90.1,36.9,29.7,96.6,46.4

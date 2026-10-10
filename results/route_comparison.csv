@@ -1,0 +1,17 @@
+route,region,design,target_MSH3_pct,achieved_knockdown_pct,implied_tissue_exposure_nmol_per_g,required_striatal_exposure_nmol_per_g,parenchymal_pctID_per_g,required_systemic_dose_nmol,fold_vs_direct_CSF_dose,predicted_expansion_suppression_pct
+A: intrathecal oligonucleotide,putamen (SPNs),,,29.0,4.84,,,,,33.0
+A: intrathecal oligonucleotide,putamen (bulk),,,25.0,4.1,,,,,29.6
+A: intrathecal oligonucleotide,caudate (snRNA-seq),,,43.0,8.02,,,,,44.7
+A: intrathecal oligonucleotide,caudate (qPCR),,,55.0,11.94,,,,,54.7
+A: intrathecal oligonucleotide,target MSH3 50% -> required exposure,,,50.0,10.12,,,,,50.6
+A: intrathecal oligonucleotide,target MSH3 25% -> required exposure,,,75.0,25.0,,,,,71.5
+A: intrathecal oligonucleotide,target MSH3 10% -> required exposure,,,90.0,61.76,,,,,84.0
+B: systemic RMT nanocarrier,,"monovalent, KD 22 nM",50.0,,,10.12,0.2374,213159.9,1053.2,
+B: systemic RMT nanocarrier,,"monovalent, KD at optimum",50.0,,,10.12,0.4609,109782.6,542.4,
+B: systemic RMT nanocarrier,,"bivalent, KD 21 nM",50.0,,,10.12,0.04,1265000.5,6250.0,
+B: systemic RMT nanocarrier,,"monovalent, KD 22 nM",25.0,,,25.0,0.2374,526580.6,1053.2,
+B: systemic RMT nanocarrier,,"monovalent, KD at optimum",25.0,,,25.0,0.4609,271202.1,542.4,
+B: systemic RMT nanocarrier,,"bivalent, KD 21 nM",25.0,,,25.0,0.04,3125000.0,6250.0,
+B: systemic RMT nanocarrier,,"monovalent, KD 22 nM",10.0,,,61.76,0.2374,1300840.8,1053.2,
+B: systemic RMT nanocarrier,,"monovalent, KD at optimum",10.0,,,61.76,0.4609,669965.3,542.4,
+B: systemic RMT nanocarrier,,"bivalent, KD 21 nM",10.0,,,61.76,0.04,7719858.6,6250.0,

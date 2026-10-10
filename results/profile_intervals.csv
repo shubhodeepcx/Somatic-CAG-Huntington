@@ -1,0 +1,5 @@
+parameter,best_fit,interval_10pct,interval_25pct,interval_50pct
+lambda40,0.0696,0.06008 to 0.07071,0.04336 to 0.09796,0.0313 to 0.1357
+beta,0.00615,0.0001 to 0.03 (grid-limited),0.0001 to 0.06 (grid-limited),0.0001 to 0.07 (grid-limited)
+R,17.66643,3.679 to 22.89,2 to 42.11 (grid-limited),2 to 3000 (grid-limited)
+L_sw,80.22644,78.33 to 81.67,71.67 to 118.3,55 to 135 (grid-limited)
