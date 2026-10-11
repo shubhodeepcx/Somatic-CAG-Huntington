@@ -316,10 +316,11 @@ def main():
     page_margins(s0)
     set_columns(s0, 1)
 
-    p = para(doc, WD_ALIGN_PARAGRAPH.CENTER, 24, space_after=2)
+    p = para(doc, WD_ALIGN_PARAGRAPH.CENTER, 24, space_after=11)
     run(p, "Somatic CAG-Repeat Expansion as a Druggable Rate Process in "
            "Huntington's Disease", size=24)
-    p = para(doc, WD_ALIGN_PARAGRAPH.CENTER, 13, space_after=10)
+    p = para(doc, WD_ALIGN_PARAGRAPH.CENTER, 13, space_after=14,
+             space_before=0)
     run(p, "A Multiscale In Silico Model Linking MutSβ Biochemistry, "
            "Striatal Neuron Loss, and the Delivery Gap for MSH3-Lowering "
            "Oligonucleotides", size=13, italic=True)

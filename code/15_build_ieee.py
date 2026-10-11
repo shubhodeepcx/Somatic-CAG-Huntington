@@ -492,9 +492,10 @@ PREAMBLE = r"""\documentclass[conference]{IEEEtran}
 \begin{document}
 
 \title{Somatic CAG-Repeat Expansion as a Druggable Rate Process in
-Huntington's Disease\\
-\large A Multiscale In Silico Model Linking MutS$\beta$ Biochemistry, Striatal
-Neuron Loss, and the Delivery Gap for MSH3-Lowering Oligonucleotides}
+Huntington's Disease\\[0.7\baselineskip]
+\parbox{0.88\textwidth}{\centering\large\itshape A Multiscale In Silico Model
+Linking MutS$\beta$ Biochemistry, Striatal Neuron Loss, and the Delivery Gap
+for MSH3-Lowering Oligonucleotides\par}\\[0.25\baselineskip]}
 
 \author{\IEEEauthorblockN{Shubho}
 \IEEEauthorblockA{\textit{Independent Research} \\
