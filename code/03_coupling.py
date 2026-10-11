@@ -2,7 +2,9 @@
 steepness of striatal degeneration?
 
 Step 1: verify the fast tau-leaping population solver against the exact
-        Gillespie solver (k_nca = 0).
+        Gillespie solver (k_nca = 0), and check the mean-field transit-time
+        integral used for calibration against stochastic mean first-passage
+        times for the same four anchors.
 Step 2: compare the cell-autonomous model with the reported relationship
         between CAP score and SPN loss (CAP > 600 -> 80-99% of SPNs lost).
 Step 3: if it under-predicts, fit a single non-cell-autonomous coupling
@@ -11,6 +13,7 @@ Step 3: if it under-predicts, fit a single non-cell-autonomous coupling
 Outputs
 -------
 results/solver_agreement.csv
+results/transit_time_check.csv
 results/knca_fit.csv
 results/population_validation_coupled.csv
 figures/fig4_coupling.png
@@ -61,9 +64,50 @@ for cag in (42, 46):
                       "age_50pct_loss_tau": round(
                           float(np.interp(0.5, ss[::-1], tt[::-1])), 2)})
 
-print("solver agreement (exact Gillespie vs tau-leaping)")
+# The comparison above is between two stochastic runs of 4,000 cells each, so
+# it cannot resolve a bias smaller than the Monte Carlo scatter. Quantify that
+# floor by comparing two *exact* runs that differ only in seed: any difference
+# here is pure sampling noise.
+for cag in (42, 46):
+    ages = np.linspace(0, 110, 1101)
+    a1 = hd.survival_curve(hd.simulate_population(float(cag), par,
+                                                  n_cells=4000, seed=5), ages)
+    a2 = hd.survival_curve(hd.simulate_population(float(cag), par,
+                                                  n_cells=4000, seed=6), ages)
+    agree.append({"inherited_CAG": cag, "dt_years": "exact vs exact",
+                  "max_abs_survival_difference": round(
+                      float(np.max(np.abs(a1 - a2))), 4),
+                  "age_50pct_loss_exact": "noise floor",
+                  "age_50pct_loss_tau": "noise floor"})
+
+print("solver agreement (exact Gillespie vs tau-leaping; last rows are the "
+      "Monte Carlo noise floor)")
 for a in agree:
     print("  ", a)
+
+# ------------------------- step 1b: mean-field integral vs first passage
+# Calibration minimises residuals on the mean-field integral
+# T = int dL / (s(L) lambda(L)). The published anchors are mean first-passage
+# times of a jump process, which is a different quantity for a nonlinear
+# lambda, and the integral also ignores contractions. This compares the two
+# directly on the four calibration legs.
+legs = [(40.0, 60.0), (60.0, 80.0), (80.0, 150.0), (40.0, 150.0)]
+transit_rows = []
+for L1, L2 in legs:
+    mf = hd.mean_transit_time(L1, L2, par)
+    mc, se, reached = hd.mean_first_passage(L1, L2, par, n_cells=4000,
+                                            seed=4100 + int(L1))
+    transit_rows.append({
+        "leg": f"{int(L1)} to {int(L2)}",
+        "mean_field_integral_years": round(mf, 2),
+        "stochastic_first_passage_years": round(mc, 2),
+        "monte_carlo_standard_error": round(se, 3),
+        "fraction_reaching_target": round(reached, 4),
+        "relative_difference_pct": round(100 * (mc - mf) / mf, 1)})
+
+print("\nmean-field integral vs stochastic mean first passage")
+for r in transit_rows:
+    print("  ", r)
 
 DT = 1 / 24
 
@@ -139,6 +183,7 @@ def _write(name, rws, fields):
 
 
 _write("solver_agreement.csv", agree, list(agree[0].keys()))
+_write("transit_time_check.csv", transit_rows, list(transit_rows[0].keys()))
 _write("knca_fit.csv", scan + [{"k_nca": round(k_fit, 3),
                                 "mean_SPN_loss_at_CAP600_pct": "fitted"}],
        ["k_nca", "mean_SPN_loss_at_CAP600_pct"])

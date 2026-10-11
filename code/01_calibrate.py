@@ -64,12 +64,28 @@ rows.append({"quantity": "mean time 150->350 CAG (months)",
 msh3_grid = np.linspace(0, 100, 21)
 obs_pd = hd.prevention_from_msh3(msh3_grid)
 cmp_rows = []
+# NOTE: this is a *secondary* test and it is partly circular. The comparator
+# obs_pd is the published regression line, not the data: it is a straight line
+# through two measured points, only k = 1 is itself a straight line in m, and
+# 19 of the 21 grid levels are regression values where nothing was measured.
+# The primary comparison is `meas_rows` below, against the two real points.
+# See section 3.2 of the paper.
 for order in (1.0, 1.5, 2.0, 3.0):
     pred = hd.model_prevention_from_msh3(msh3_grid, order=order)
+    # max error against the two measured points: the non-circular statistic
+    worst = max(abs(float(hd.model_prevention_from_msh3(m, order)) - y)
+                for m, y in [(hd.LIT["msh3_protein_10nmol_pct"],
+                              hd.LIT["expansion_prevented_10nmol"]),
+                             (hd.LIT["msh3_protein_3nmol_pct"],
+                              hd.LIT["expansion_prevented_3nmol"])])
     cmp_rows.append({"binding_order_k": order,
-                     "rmse_vs_published_regression": round(
-                         float(np.sqrt(np.mean((pred - obs_pd) ** 2))), 2)})
-best_order = min(cmp_rows, key=lambda r: r["rmse_vs_published_regression"])
+                     "max_error_vs_two_measured_points_pct": round(worst, 2),
+                     "rmse_vs_published_regression_line": round(
+                         float(np.sqrt(np.mean((pred - obs_pd) ** 2))), 2),
+                     "note": "regression-line column is partly circular; "
+                             "see section 3.2"})
+best_order = min(cmp_rows,
+                 key=lambda r: r["max_error_vs_two_measured_points_pct"])
 
 meas = [(hd.LIT["msh3_protein_10nmol_pct"], hd.LIT["expansion_prevented_10nmol"]),
         (hd.LIT["msh3_protein_3nmol_pct"], hd.LIT["expansion_prevented_3nmol"])]
@@ -125,7 +141,7 @@ def _write(name, rws, fields):
 
 _write("calibration_check.csv", rows, ["quantity", "published", "model", "role"])
 _write("model_comparison_msh3.csv", cmp_rows,
-       ["binding_order_k", "rmse_vs_published_regression"])
+       list(cmp_rows[0].keys()))
 _write("msh3_measured_points.csv", meas_rows, list(meas_rows[0].keys()))
 _write("identifiability_profiles.csv", prof_rows, list(prof_rows[0].keys()))
 
@@ -135,7 +151,9 @@ for r in rows:
           f"model={str(r['model']):<9} [{r['role']}]")
 print("\nMSH3 binding order (RMSE vs published regression):")
 for r in cmp_rows:
-    print("   k =", r["binding_order_k"], "->", r["rmse_vs_published_regression"])
+    print(f"   k = {r['binding_order_k']}: worst error on the two measured "
+          f"points {r['max_error_vs_two_measured_points_pct']:.2f} pp, "
+          f"RMSE vs regression line {r['rmse_vs_published_regression_line']:.2f}")
 print("\nalpha =", round(par["beta"] * RT, 4), "kcal/mol per repeat")
 print("\nidentifiability:")
 for r in prof_rows:

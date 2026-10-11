@@ -237,6 +237,13 @@ for r in routeB:
 fig, ax = plt.subplots(1, 3, figsize=(10.4, 2.95))
 
 xx = np.logspace(-1, 3, 300)
+# Two parameters fitted to two points: the curve is an exact interpolation
+# inside this span and an extrapolation outside it. Shade the span so that
+# every exposure quoted elsewhere can be read against it.
+ax[0].axvspan(float(dose_per_g.min()), float(dose_per_g.max()),
+              color="#c6d9f1", alpha=0.55, lw=0, zorder=0)
+ax[0].annotate("calibrated\nrange", xy=(float(np.sqrt(dose_per_g.min() * dose_per_g.max())), 92),
+               ha="center", va="top", fontsize=6.0, color="#1f4e79")
 ax[0].semilogx(xx, msh3_from_exposure(xx, EC50, HILL), color="#1f4e79", lw=1.9)
 ax[0].scatter(dose_per_g, msh3_obs, s=42, color="#e36c0a", zorder=5,
               edgecolor="k", lw=0.4, label="mouse ICV (3, 10 nmol)")
@@ -245,7 +252,7 @@ for tgt, c in zip(targets, ("#8064a2", "#4f81bd", "#c0504d")):
     ax[0].annotate(f"{100-tgt:.0f}% KD", xy=(0.12, tgt + 2), fontsize=6.2, color=c)
 ax[0].set_xlabel("tissue exposure (nmol g$^{-1}$)")
 ax[0].set_ylabel("MSH3 protein (% of control)")
-ax[0].set_title("A  exposure-response")
+ax[0].set_title("A  exposure-response (2 points, 2 parameters)")
 ax[0].legend(frameon=False, fontsize=6.5)
 
 regions = list(nhp_residual.keys())
@@ -253,9 +260,9 @@ kd_vals = [100 * (1 - nhp_residual[r]) for r in regions]
 supp = [float(hd.prevention_from_msh3(100 * nhp_residual[r])) for r in regions]
 y = np.arange(len(regions))
 ax[1].barh(y - 0.19, kd_vals, height=0.36, color="#4f81bd",
-           label="MSH3 knockdown achieved")
+           label="target knockdown measured in primate")
 ax[1].barh(y + 0.19, supp, height=0.36, color="#c0504d",
-           label="expansion suppression")
+           label="predicted expansion suppression")
 ax[1].set_yticks(y)
 ax[1].set_yticklabels(regions, fontsize=6.8)
 ax[1].set_xlabel("%")

@@ -1,0 +1,6 @@
+assumed_parental_onset_age_y,onset_CAG42_y,loss_at_onset_CAG42_dwell_faithful_pct,onset_CAG46_y,loss_at_onset_CAG46_dwell_faithful_pct,onset_CAG50_y,loss_at_onset_CAG50_dwell_faithful_pct,loss_at_onset_CAG42_loss_faithful_pct,loss_at_onset_CAG46_loss_faithful_pct,loss_at_onset_CAG50_loss_faithful_pct
+35.0,43.1,15.0,37.5,19.5,31.9,24.3,64.4,69.9,75.2
+40.0,44.8,16.9,39.2,22.2,33.6,27.5,67.6,73.2,78.7
+45.0,46.4,18.4,40.8,24.4,35.2,31.2,70.7,76.3,81.9
+50.0,48.1,20.6,42.5,26.6,36.9,34.6,73.3,78.8,84.6
+55.0,49.7,22.3,44.1,29.1,38.5,37.7,75.7,81.3,86.8

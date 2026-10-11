@@ -12,8 +12,16 @@ uncertainty, so three tolerances are reported: 10%, 25% and 50%.
 
 Outputs
 -------
+A fifth panel treats the switch width w_sw differently, because it is an
+assumed input rather than a fitted parameter. There it is held at a grid of
+values and *all four* parameters are refitted, which asks whether the anchors
+can see the sharpness of the switch at all.
+
+Outputs
+-------
 results/profile_intervals.csv
 results/profile_curves.csv
+results/wsw_profile.csv
 figures/fig11_profile.png
 """
 import csv
@@ -143,8 +151,32 @@ def _write(name, rws, fields):
 _write("profile_intervals.csv", interval_rows, list(interval_rows[0].keys()))
 _write("profile_curves.csv", curve_rows, list(curve_rows[0].keys()))
 
-fig, ax = plt.subplots(1, 4, figsize=(11.0, 2.7))
-for a, name in zip(ax, NAMES):
+# ---------------------------------------------------------------------------
+# w_sw is an assumed input, not a fitted parameter, so it gets a different
+# scan: fix it, refit all four parameters, and see whether the anchors notice.
+# ---------------------------------------------------------------------------
+W_GRID = np.linspace(3.0, 12.0, 19)
+w_saved = hd.ASSUMED["w_switch"]
+wsw_rows = []
+for wv in W_GRID:
+    hd.ASSUMED["w_switch"] = float(wv)
+    pw = hd.calibrate()
+    vec = np.array([np.log(pw["lambda40"]), pw["beta"], np.log(pw["R"]),
+                    pw["L_sw"]])
+    wsw_rows.append({"w_switch": round(float(wv), 3),
+                     "worst_relative_deviation": round(
+                         worst_relative_deviation(vec), 6),
+                     "refitted_lambda40": round(pw["lambda40"], 5),
+                     "refitted_R": round(pw["R"], 2),
+                     "refitted_L_sw": round(pw["L_sw"], 2)})
+hd.ASSUMED["w_switch"] = w_saved
+_write("wsw_profile.csv", wsw_rows, list(wsw_rows[0].keys()))
+print("\nw_switch scan (assumed input; all four parameters refitted)")
+for r in wsw_rows[::3]:
+    print("  ", r)
+
+fig, ax = plt.subplots(1, 5, figsize=(13.4, 2.7))
+for a, name in zip(ax[:4], NAMES):
     vals, devs = curves[name]
     if name in ("lambda40", "R"):
         a.semilogx(vals, 100 * devs, color="#1f4e79", lw=1.7)
@@ -158,12 +190,40 @@ for a, name in zip(ax, NAMES):
     a.set_ylim(0, 80)
     a.set_xlabel(LABELS[name], fontsize=8)
     a.set_ylabel("worst anchor error (%)" if name == "lambda40" else "")
-ax[0].set_title("A", loc="left")
-ax[1].set_title("B", loc="left")
-ax[2].set_title("C", loc="left")
-ax[3].set_title("D", loc="left")
+wv = np.array([r["w_switch"] for r in wsw_rows])
+dv = np.array([r["worst_relative_deviation"] for r in wsw_rows])
+aE = ax[4]
+# shade the widths at which the refit still meets the 10% tolerance used in
+# the other panels, and mark the sub-range where the fit is still exact
+ok = wv[dv <= 0.10]
+if ok.size:
+    aE.axvspan(ok.min(), ok.max(), color="#dce6f1", alpha=0.8, lw=0, zorder=0)
+exact = wv[dv <= 1e-9]
+if exact.size:
+    aE.axvspan(exact.min(), exact.max(), color="#b8cce4", alpha=0.7, lw=0,
+               zorder=0)
+aE.plot(wv, [r["refitted_L_sw"] for r in wsw_rows], color="#1f4e79", lw=1.7,
+        label=r"refitted $L_{sw}$")
+aE.set_xlabel(r"assumed $w_{sw}$  (repeats)", fontsize=8)
+aE.annotate("exact fit", xy=(0.30, 0.70), xycoords="axes fraction",
+            fontsize=6.0, color="#1f4e79", ha="center", va="center")
+aE.set_ylabel("repeats")
+aE.axvline(w_saved, color="k", lw=0.9, ls="--")
+aE2 = aE.twinx()
+aE2.plot(wv, [r["refitted_R"] for r in wsw_rows], color="#c0504d", lw=1.7,
+         ls="--", label="refitted $R$")
+aE2.set_ylabel("$R$", color="#c0504d")
+aE2.tick_params(axis="y", labelcolor="#c0504d")
+aE2.spines["right"].set_visible(True)
+aE.legend(fontsize=7, loc="upper left", frameon=False)
+aE2.legend(fontsize=7, loc="lower right", frameon=False)
+
+for letter, a in zip("ABCDE", ax):
+    a.set_title(letter, loc="left")
+fig.subplots_adjust(wspace=0.42)
 fig.suptitle("Feasible ranges of the fitted parameters "
-             "(dotted lines: 10, 25 and 50% tolerance)", fontsize=9, y=1.04)
+             "(dotted lines: 10, 25 and 50% tolerance); "
+             "panel E scans the assumed switch width", fontsize=9, y=1.04)
 fig.savefig(os.path.join(FIG, "fig11_profile.png"))
 plt.close(fig)
 print("\nwrote figure 11 and result tables")

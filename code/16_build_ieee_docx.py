@@ -44,7 +44,7 @@ ROMAN = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
          "XI", "XII", "XIII", "XIV", "XV"]
 
 SUBSCRIPTS = ["K_D,b", "K_D", "K_r", "L_sw", "w_sw", "L_pen", "L_death",
-              "L_commit", "L_C", "k_nca", "f_lost", "f_v", "h_max"]
+              "L_commit", "L_C", "L_max", "k_nca", "f_lost", "f_v", "h_max"]
 SUPERSCRIPTS = ["m^k", "2^k"]
 
 # Pulled from the LaTeX build so the two versions say the same thing.
@@ -61,11 +61,15 @@ ABSTRACT = (
     "than a graded length dependence, centred on 80.2 repeats, and a "
     "first-order rather than cooperative dependence on MSH3, so suppression "
     "tracks target engagement proportionally. The calibrated model reproduces "
-    "four of five held-out observations and predicts, without being fitted to "
-    "them, indirect-pathway depletion, three genetic-modifier effect sizes and "
-    "the loss at which clinical onset should occur. Twenty-nine percent "
+    "two of five held-out observations cleanly, misses the upper tail of "
+    "terminal tract lengths and the small fraction of neurons that never "
+    "expand, and predicts, without being "
+    "fitted to them, indirect-pathway depletion, three genetic-modifier "
+    "effect sizes and the loss at which clinical onset should occur. The "
+    "conclusions are shown to survive a change in the calibration estimator "
+    "that raises end-stage neuron loss substantially. Twenty-nine percent "
     "striatal MSH3 lowering, the best figure measured in primates, begun at "
-    "age 30, preserves 11.4 percentage points of striatum at age 70 across "
+    "age 30, preserves 11.5 percentage points of striatum at age 70 across "
     "full parameter uncertainty; starting at 50 removes the benefit. The "
     "limiting factor is target engagement rather than pharmacology: the "
     "striatum needs 7 mg of drug and a systemic transferrin-receptor "
@@ -83,11 +87,14 @@ TABLE_CAPTIONS = [
     "Mapping of known genetic modifiers onto parameters of the fitted rate law.",
     "Provenance of every parameter in the model. Entries marked fitted here "
     "were estimated in this work; entries marked assumed carry no supporting "
-    "measurement and are all varied in the sensitivity analysis.",
+    "measurement. The rightmost column states how each assumed value is "
+    "varied: globally and simultaneously, or one at a time.",
     "Held-out observations, none of which was used in calibration, against the "
-    "calibrated population model.",
-    "Target engagement achieved by intrathecal delivery in primate striatum, "
-    "and the expansion suppression it implies.",
+    "calibrated population model. Three rows match, one overshoots and one "
+    "fails.",
+    "Target knockdown achieved by intrathecal delivery in primate striatum, "
+    "measured on a reporter transcript rather than on MSH3, and the "
+    "expansion suppression it implies if MSH3 behaves the same way.",
     "Systemic dose required for 75% striatal MSH3 lowering, by nanocarrier "
     "design.",
     "Predicted outcome of lifelong treatment from age 30 in a 42-repeat "

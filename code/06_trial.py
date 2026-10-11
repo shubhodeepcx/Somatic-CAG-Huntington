@@ -19,6 +19,7 @@ Outputs
 results/trial_grid.csv
 results/trial_scenarios.csv
 results/loss_vs_cap.csv
+results/parent_aao_sensitivity.csv
 figures/fig8_trial.png
 figures/fig9_start_age.png
 """
@@ -188,6 +189,38 @@ for mname, g in MODELS.items():
                              100 * (1 - float(np.interp(onset, tt, ss))), 1)})
 
 
+# ------------------- sensitivity to the assumed parental age at onset
+# The external onset regression takes a parental age at onset, which the
+# source does not report as a cohort mean; 45 years is assumed here. Both
+# conclusions that use the regression (the rejection of M2 and the predicted
+# neuron loss at clinical onset) therefore need it swept.
+# The survival curves do not depend on the assumed parental onset age, so
+# simulate each model and length once and reuse them across the sweep.
+aao_curves = {}
+for mname, g in MODELS.items():
+    for cag in (42, 46, 50):
+        p = dict(par0); p["A"] = par0["A"] * g
+        aao_curves[(mname, cag)] = hd.simulate_population_tau(
+            float(cag), p, n_cells=N, dt=DT, seed=3000 + cag)[1:]
+
+aao_rows = []
+for paao in (35.0, 40.0, 45.0, 50.0, 55.0):
+    row = {"assumed_parental_onset_age_y": paao}
+    for mname, g in MODELS.items():
+        tag = "dwell_faithful" if mname.startswith("M1") else "loss_faithful"
+        for cag in (42, 46, 50):
+            tt, ss = aao_curves[(mname, cag)]
+            onset = hd.ranen_predicted_onset(cag, parent_aao=paao)
+            row[f"onset_CAG{cag}_y"] = round(onset, 1)
+            row[f"loss_at_onset_CAG{cag}_{tag}_pct"] = round(
+                100 * (1 - float(np.interp(onset, tt, ss))), 1)
+    aao_rows.append(row)
+
+print("\nsensitivity to the assumed parental age at onset")
+for r in aao_rows:
+    print("  ", r)
+
+
 def _write(name, rws, fields):
     with open(os.path.join(RES, name), "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fields)
@@ -198,6 +231,7 @@ def _write(name, rws, fields):
 _write("trial_grid.csv", grid_rows, list(grid_rows[0].keys()))
 _write("trial_scenarios.csv", scen_rows, list(scen_rows[0].keys()))
 _write("loss_vs_cap.csv", cap_rows, list(cap_rows[0].keys()))
+_write("parent_aao_sensitivity.csv", aao_rows, list(aao_rows[0].keys()))
 
 print("headline grid (model M1, CAG 42)")
 for r in grid_rows:

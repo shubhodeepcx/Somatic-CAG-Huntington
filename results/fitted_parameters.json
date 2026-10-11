@@ -24,8 +24,6 @@
   "assumed_structural_constants": {
     "L50_ceiling": 400.0,
     "w_switch": 6.0,
-    "L_switch": 80.0,
-    "R_cluster": 10.0,
     "L_death_50": 300.0,
     "death_width": 40.0,
     "h_death_max": 6.0,
@@ -35,6 +33,8 @@
   },
   "best_msh3_binding_order": {
     "binding_order_k": 1.0,
-    "rmse_vs_published_regression": 4.97
+    "max_error_vs_two_measured_points_pct": 4.1,
+    "rmse_vs_published_regression_line": 4.97,
+    "note": "regression-line column is partly circular; see section 3.2"
   }
 }

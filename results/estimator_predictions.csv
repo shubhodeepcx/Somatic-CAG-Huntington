@@ -1,0 +1,3 @@
+calibration_estimator,mean_loss_at_CAP600_pct,age_25pct_loss_CAG42,age_50pct_loss_CAG42,age_50pct_loss_CAG50,loss_at_predicted_onset_CAG42_pct,loss_at_predicted_onset_CAG50_pct,untreated_loss_at_70_pct,treated_loss_at_70_pct,benefit_points
+mean-field integral,39.8,52.1,72.3,45.3,18.7,30.6,46.9,33.2,13.7
+stochastic first passage,62.4,39.6,54.9,34.4,36.1,52.1,70.6,55.9,14.7

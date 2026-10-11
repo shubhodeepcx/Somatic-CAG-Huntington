@@ -1,6 +1,6 @@
 """07 -- Global sensitivity analysis of the therapeutic prediction.
 
-Every quantity that was assumed rather than measured, plus the published
+Every assumed constant of the expansion and elimination model, plus the published
 calibration anchors themselves (which carry real uncertainty), is varied
 simultaneously over a Latin hypercube. For each sample the rate law is
 re-calibrated to the (perturbed) anchors and the whole pipeline is re-run, so
@@ -68,6 +68,9 @@ RANGES = {
     # contraction submodel
     "contraction_ratio":  (0.0, 0.30, "assumed"),
     "contraction_step":   (1.0, 4.0, "assumed"),
+    # numerical ceiling on tract length: named in section 3.3 as the reason the
+    # terminal-length tail is too narrow, so it is swept rather than asserted
+    "L_max":              (600.0, 1400.0, "assumed"),
     # pharmacodynamic coupling: order of the MSH3 dependence of lambda
     "msh3_order":         (0.8, 1.3, "anchor"),
 }
@@ -103,6 +106,7 @@ for i in range(N_SAMPLES):
         hd.ASSUMED["L50_ceiling"] = s["L50_ceiling"]
         hd.ASSUMED["contraction_ratio"] = s["contraction_ratio"]
         hd.ASSUMED["contraction_step"] = s["contraction_step"]
+        hd.ASSUMED["L_max"] = s["L_max"]
 
         p = hd.calibrate(fold_target=s["fold_rise_70_90"], quick=True)
         hazard = {"L_death_50": s["L_death_50"], "width": s["death_width"],

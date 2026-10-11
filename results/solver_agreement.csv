@@ -5,3 +5,5 @@ inherited_CAG,dt_years,max_abs_survival_difference,age_50pct_loss_exact,age_50pc
 46,0.08333,0.0139,58.1,57.81
 46,0.04167,0.0168,58.1,57.02
 46,0.02083,0.0135,58.1,57.66
+42,exact vs exact,0.024,noise floor,noise floor
+46,exact vs exact,0.0125,noise floor,noise floor

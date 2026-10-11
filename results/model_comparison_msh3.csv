@@ -1,5 +1,5 @@
-binding_order_k,rmse_vs_published_regression
-1.0,4.97
-1.5,11.61
-2.0,18.02
-3.0,26.43
+binding_order_k,max_error_vs_two_measured_points_pct,rmse_vs_published_regression_line,note
+1.0,4.1,4.97,regression-line column is partly circular; see section 3.2
+1.5,9.58,11.61,regression-line column is partly circular; see section 3.2
+2.0,20.09,18.02,regression-line column is partly circular; see section 3.2
+3.0,34.36,26.43,regression-line column is partly circular; see section 3.2

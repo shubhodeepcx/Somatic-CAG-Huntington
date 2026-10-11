@@ -81,7 +81,7 @@ LIT = {
     "ranen_intercept": 90.3918,
     "ranen_parent_coef": 0.3293,
     "ranen_cag_coef": -1.3996,
-    "ranen_mean_parent_aao": 45.0,   # ASSUMED cohort mean, used only for a sanity check
+    "ranen_mean_parent_aao": 45.0,   # ASSUMED cohort mean; swept in 04_reconcile.py
 
     # --- Enroll-HD / Warner et al. : CAP score
     "cap_offset": 33.66,
@@ -94,8 +94,6 @@ LIT = {
 ASSUMED = {
     "L50_ceiling": 400.0,  # length at which slip-out occupancy saturates (soft ceiling)
     "w_switch": 6.0,       # width (repeats) of the isolated->clustered slip-out switch
-    "L_switch": 80.0,      # placeholder; fitted in calibrate()
-    "R_cluster": 10.0,     # placeholder; fitted in calibrate()
     "L_death_50": 300.0,   # CAG length at which elimination hazard is half-maximal
     "death_width": 40.0,   # steepness (CAG) of the elimination hazard sigmoid
     "h_death_max": 6.0,    # maximal elimination hazard (per year)
@@ -162,7 +160,9 @@ def clustered_fraction(L, L_sw=None, w_sw=None):
     once a tract is long enough to host several slip-outs simultaneously.
     Modelled as a sigmoid switch in tract length.
     """
-    L_sw = ASSUMED["L_switch"] if L_sw is None else L_sw
+    if L_sw is None:
+        raise ValueError("clustered_fraction: L_sw must be supplied; it is a "
+                         "fitted parameter and has no default")
     w_sw = ASSUMED["w_switch"] if w_sw is None else w_sw
     return 1.0 / (1.0 + np.exp(-(np.asarray(L, float) - L_sw) / w_sw))
 
@@ -186,7 +186,9 @@ def lambda_L(L, A, beta, L50=None, msh3=1.0, fan1=1.0, footprint=None,
     expansion flux is divided by it.
     """
     L50 = ASSUMED["L50_ceiling"] if L50 is None else L50
-    R = ASSUMED["R_cluster"] if R is None else R
+    if R is None:
+        raise ValueError("lambda_L: R must be supplied; it is a fitted "
+                         "parameter and has no default")
     C = clustered_fraction(L, L_sw, w_sw)
     return (A * n_sites(L, footprint) * phi_slipout(L, beta, L50)
             * ((1.0 - C) + R * C) * msh3 / fan1)
@@ -205,12 +207,54 @@ def mean_transit_time(L1, L2, par, msh3=1.0, fan1=1.0, step0=None):
     Integrates dL/dt = s(L) * lambda(L), i.e.
         T = int_{L1}^{L2} dL / (s(L) * lambda(L)).
     Used for fast parameter fitting; verified against the exact Gillespie
-    simulation in `02_spn_simulation.py`.
+    simulation in `03_coupling.py`.
     """
     grid = np.linspace(L1, L2, 4001)
     integrand = 1.0 / (step_L(grid, step0, par.get("Ls", np.inf))
                        * lam(grid, par, msh3=msh3, fan1=fan1))
     return float(np.trapezoid(integrand, grid))
+
+
+def mean_first_passage(L0, L_target, par, n_cells=4000, seed=0, msh3=1.0,
+                       fan1=1.0, step=None, contraction_ratio=None,
+                       contraction_step=None, t_max=400.0):
+    """Mean first-passage time from L0 to L_target by exact Gillespie.
+
+    This is the stochastic counterpart of `mean_transit_time`, which integrates
+    the mean-field trajectory dL/dt = s(L)*lambda(L). For a nonlinear lambda
+    the two are not the same quantity, and contractions enter the stochastic
+    process but not the integral, so the comparison is a real check rather
+    than an identity. Elimination is not simulated: the elimination hazard is
+    zero below the 150-repeat threshold, so it cannot affect any of the
+    published transit-time anchors.
+
+    Returns (mean, standard error, fraction of cells that reached L_target).
+    """
+    rng = np.random.default_rng(seed)
+    step0 = LIT["step_repeats"] if step is None else step
+    Ls_par = par.get("Ls", np.inf)
+    cr = ASSUMED["contraction_ratio"] if contraction_ratio is None else contraction_ratio
+    cs = ASSUMED["contraction_step"] if contraction_step is None else contraction_step
+    times = []
+    for _ in range(n_cells):
+        t, L = 0.0, float(L0)
+        while t < t_max and L < L_target:
+            lam_exp = float(lam(L, par, msh3=msh3, fan1=fan1))
+            tot = lam_exp * (1.0 + cr)
+            t += rng.exponential(1.0 / tot)
+            if rng.random() * tot < lam_exp:
+                s_mean = max(float(step_L(L, step0, Ls_par)), 1.0 + 1e-9)
+                L = min(L + float(rng.geometric(1.0 / s_mean)),
+                        ASSUMED["L_max"])
+            else:
+                L = max(L - cs, 5.0)
+        if L >= L_target:
+            times.append(t)
+    arr = np.asarray(times, float)
+    if arr.size == 0:
+        return float("nan"), float("nan"), 0.0
+    return (float(arr.mean()), float(arr.std(ddof=1) / np.sqrt(arr.size)),
+            arr.size / n_cells)
 
 
 def _params_from_vector(v):
@@ -374,6 +418,10 @@ def simulate_cell(L0, par, rng, t_max=110.0, msh3=1.0, fan1=1.0,
         lam_con = cr * lam_exp
         h = float(death_hazard(L, **hazard_kw))
         tot = lam_exp + lam_con + h
+        # Reached only at complete MSH3 ablation (msh3 = 0) below the
+        # elimination threshold, where no event of any kind can occur. Skip
+        # forward to the next change in treatment status instead of drawing
+        # from an exponential with zero rate.
         if tot <= 0:
             t_next = min(t_treat if t < t_treat else t_max, t_max)
             if L < LIT["L_phaseC"]:
