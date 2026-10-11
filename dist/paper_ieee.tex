@@ -104,7 +104,9 @@ The rate at which expansion events occur in one striatal projection neuron carry
 \end{split}
 \end{equation}
 
-Each factor corresponds to a step in the mechanism described in Section~\ref{sec:1.3}.
+Each factor corresponds to a step in the mechanism described in Section~\ref{sec:1.3}, and each is sourced separately: the footprint from structural work \cite{tandem}, the slip-out equilibrium from polymer thermodynamics, the clustering penalty from the in vitro repair assays \cite{panigrahi}, and the MSH3 and FAN1 terms from the genetics and the mouse dose-response \cite{disirna,senoussi}.
+
+Combining them as a product is a modelling choice rather than a published result, and it is the one piece of this structure with no direct support. It treats the steps as independent stages of a single pathway, so that the rate of a productive event is the product of the chances of each stage. That is reasonable if the stages really are sequential and non-interacting. It would be wrong if, for example, MutS$\beta$ bound at one site altered the slip-out probability at a neighbouring one, which tandem binding \cite{tandem} makes conceivable. No available dataset separates these possibilities, so the product form is carried as an explicit structural assumption and named as such in the limitations.
 
 \textbf{Site multiplicity, n(L) = L / w.} A single MutS$\beta$ molecule occludes about \textit{w} = 17 repeats at a hairpin stem \cite{tandem}, so a longer tract can carry proportionally more. This is the weakest of the length dependences, growing linearly, and it turns out to contribute very little; it is retained because it is measured rather than assumed.
 
@@ -669,6 +671,7 @@ Finally, there is a methodological point worth making. Every quantitative claim 
 \label{sec:5}
 \begin{enumerate}
 \item \textbf{No primary data.} Every calibration target is a published summary statistic, and several of them are themselves model-derived. The transit times in \cite{handsaker} come from a simulation rather than from longitudinal measurement of single cells, so this model inherits the assumptions of that one.
+\item \textbf{The functional form of the rate law is assumed.} Each factor in $\lambda(L)$ is sourced, but writing them as a product is not: it assumes the steps are independent and sequential. The fit cannot test that assumption, because a different combination rule with its own four free parameters would very likely also reproduce four anchors. What the data constrain is the shape of the length dependence, not the algebra that produces it.
 \item \textbf{A key biochemical source is a preprint.} The MutS$\beta$ footprint and stoichiometry \cite{tandem} come from a bioRxiv preprint that has not been peer reviewed. The sensitivity analysis shows the footprint is immaterial, for the structural reason given in Section~\ref{sec:3.13}, but the qualitative tandem-binding picture is not independently confirmed here.
 \item \textbf{The discrepancy with end-stage autopsy data is unresolved}, not explained away. Two independent published constraints cannot both be satisfied by this model structure. The resolution adopted, that ``CAP above 600'' describes a late-stage population rather than a threshold, is reasonable and is the least convenient reading for the author's own argument, but it is not demonstrated.
 \item \textbf{Species scaling is crude.} The macaque-to-human penetration correction uses cube-root geometric scaling and an assumed putaminal depth. The direction is robust, the magnitude is not, and a real answer would need a diffusion model on actual human anatomy.
