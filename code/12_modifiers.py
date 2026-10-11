@@ -68,12 +68,15 @@ scans = {
 }
 
 curves = {}
-for label, entries in scans.items():
+# Seeds are derived from the scan index rather than from hash(label): Python
+# randomises string hashing per process, so a hash-derived seed would silently
+# change the numbers from one run to the next.
+for s_i, (label, entries) in enumerate(scans.items()):
     xs, ys = [], []
     for i, (kind, v) in enumerate(entries):
         kw = {"msh3": 1.0, "fan1": 1.0, "dL_sw": 0.0}
         kw[kind] = v
-        a = age_at_loss(0.25, seed=100 * (hash(label) % 97) + i, **kw)
+        a = age_at_loss(0.25, seed=3100 + 100 * s_i + i, **kw)
         shift = (a - base) if np.isfinite(a) else np.nan
         xs.append(v)
         ys.append(shift)

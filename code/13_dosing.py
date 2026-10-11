@@ -120,8 +120,10 @@ for r in rows:
 
 residuals = [0.25, lookup[(6, 6)], lookup[(6, 3)], lookup[(12, 3)],
              lookup[(4, 9)]]
-for (label, _), res in zip(cases, residuals):
-    l70 = loss_at_70(res, seed=hash(label) % 10000)
+# Seeds come from the case index, not from hash(label), because Python
+# randomises string hashing per process and the numbers have to reproduce.
+for k, ((label, _), res) in enumerate(zip(cases, residuals)):
+    l70 = loss_at_70(res, seed=7100 + 17 * k)
     bench_rows.append({"regimen": label,
                        "effective_residual_MSH3": round(float(res), 3),
                        "effective_knockdown_pct": round(100 * (1 - res), 1),
@@ -185,14 +187,23 @@ cb.set_label("time-averaged knockdown (%)", fontsize=7)
 cb.ax.tick_params(labelsize=7)
 ax[1].set_title("B  75% peak knockdown per dose", fontsize=9)
 
-labels = [r["regimen"].replace(", ", ",\n") for r in bench_rows]
+labels = [r["regimen"] for r in bench_rows]
 vals = [r["benefit_points"] for r in bench_rows]
 cols = ["#8064a2"] + ["#1f4e79"] * (len(vals) - 1)
-ax[2].barh(range(len(vals)), vals, color=cols, height=0.6)
+ax[2].barh(range(len(vals)), vals, color=cols, height=0.52)
+# Regimen names go above their bars; as tick labels they would run out of the
+# axes and over the colour bar of panel B.
 ax[2].set_yticks(range(len(labels)))
-ax[2].set_yticklabels(labels, fontsize=6.0)
+ax[2].set_yticklabels([])
+ax[2].tick_params(axis="y", length=0)
+for k, lab in enumerate(labels):
+    ax[2].annotate(lab, xy=(0.6, k + 0.32), fontsize=6.1, ha="left",
+                   va="bottom")
+ax[2].set_xlim(0, max(vals) * 1.12)
+ax[2].set_ylim(-0.6, len(vals) - 0.3)
 ax[2].set_xlabel("striatum preserved at age 70\n(percentage points)")
 ax[2].set_title("C  lifetime cost of intermittency", fontsize=9)
+fig.subplots_adjust(wspace=0.34)
 fig.savefig(os.path.join(FIG, "fig14_dosing.png"))
 plt.close(fig)
 print("\nwrote figure 14 and result tables")

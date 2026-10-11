@@ -1,22 +1,22 @@
 parameter,value,age_at_25pct_loss,shift_vs_baseline_years
-MSH3 expression (theta),0.6,86.7,34.9
-MSH3 expression (theta),0.8,65.2,13.4
-MSH3 expression (theta),0.9,57.9,6.1
-MSH3 expression (theta),1.0,51.7,-0.1
-MSH3 expression (theta),1.1,47.1,-4.7
-MSH3 expression (theta),1.25,41.6,-10.3
-MSH3 expression (theta),1.5,34.6,-17.2
+MSH3 expression (theta),0.6,85.5,33.6
+MSH3 expression (theta),0.8,63.7,11.9
+MSH3 expression (theta),0.9,57.5,5.6
+MSH3 expression (theta),1.0,52.2,0.4
+MSH3 expression (theta),1.1,47.4,-4.5
+MSH3 expression (theta),1.25,41.8,-10.1
+MSH3 expression (theta),1.5,35.2,-16.6
 FAN1 activity (f),0.5,25.9,-25.9
-FAN1 activity (f),0.75,38.6,-13.3
-FAN1 activity (f),0.9,46.8,-5.0
-FAN1 activity (f),1.0,51.9,0.0
-FAN1 activity (f),1.25,64.7,12.9
-FAN1 activity (f),1.5,78.1,26.3
-FAN1 activity (f),2.0,104.2,52.3
-clustering switch shift (repeats),-15,28.0,-23.9
-clustering switch shift (repeats),-10,35.6,-16.3
-clustering switch shift (repeats),-5,43.7,-8.1
-clustering switch shift (repeats),0,52.0,0.2
-clustering switch shift (repeats),5,60.3,8.5
-clustering switch shift (repeats),10,67.2,15.3
-clustering switch shift (repeats),15,73.9,22.1
+FAN1 activity (f),0.75,39.2,-12.6
+FAN1 activity (f),0.9,46.3,-5.5
+FAN1 activity (f),1.0,51.5,-0.3
+FAN1 activity (f),1.25,65.1,13.3
+FAN1 activity (f),1.5,76.7,24.9
+FAN1 activity (f),2.0,103.3,51.5
+clustering switch shift (repeats),-15,27.6,-24.2
+clustering switch shift (repeats),-10,35.0,-16.8
+clustering switch shift (repeats),-5,43.7,-8.2
+clustering switch shift (repeats),0,52.1,0.2
+clustering switch shift (repeats),5,59.8,7.9
+clustering switch shift (repeats),10,67.7,15.9
+clustering switch shift (repeats),15,74.1,22.2

@@ -267,15 +267,23 @@ labels = [r["design"] for r in routeB if r["target_MSH3_pct"] == 25.0]
 doses = [r["required_systemic_dose_nmol"] for r in routeB if r["target_MSH3_pct"] == 25.0]
 direct = [r["required_striatal_exposure_nmol_per_g"] * SCALE["human_striatum_g"]
           for r in routeB if r["target_MSH3_pct"] == 25.0][0]
-ax[2].barh(range(len(labels)), doses, color="#8064a2", height=0.5)
+ax[2].barh(range(len(labels)), doses, color="#8064a2", height=0.46)
 ax[2].axvline(direct, color="k", ls="--", lw=1.1)
-ax[2].annotate("dose delivered\ndirectly to striatum", xy=(direct, 2.35),
-               fontsize=6.2, ha="left")
 ax[2].set_xscale("log")
+# Long design names are written above each bar rather than as tick labels,
+# which would otherwise run left out of the axes and over panel B.
 ax[2].set_yticks(range(len(labels)))
-ax[2].set_yticklabels(labels, fontsize=6.6)
+ax[2].set_yticklabels([])
+ax[2].tick_params(axis="y", length=0)
+for k, lab in enumerate(labels):
+    ax[2].annotate(lab.replace("KD", "$K_D$"), xy=(direct * 1.25, k + 0.29),
+                   fontsize=6.3, ha="left", va="bottom")
+ax[2].annotate("dose delivered directly to the striatum",
+               xy=(direct * 1.25, -0.60), fontsize=6.2, ha="left", va="center")
+ax[2].set_ylim(-1.0, len(labels) - 0.35)
 ax[2].set_xlabel("systemic dose required (nmol)")
 ax[2].set_title("C  75% MSH3 lowering, systemic route")
+fig.subplots_adjust(wspace=0.30)
 fig.savefig(os.path.join(FIG, "fig6_delivery.png"))
 plt.close(fig)
 

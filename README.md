@@ -7,7 +7,9 @@ prevent, whether current delivery technology can achieve it, and whether a trial
 of plausible size could see the effect.
 
 **Read the paper:** [`paper.md`](paper.md), or the built versions in
-[`dist/`](dist) as Word and PDF.
+[`dist/`](dist). Four builds are produced from the same source: a plain Word
+and PDF pair for reading, and an IEEE two-column Word and PDF pair in the
+conference format, alongside the LaTeX source that produced it.
 
 ## Layout
 
@@ -29,9 +31,11 @@ of plausible size could see the effect.
 | `code/12_modifiers.py` | Genetic modifiers as parameter perturbations, Figure 13 |
 | `code/13_dosing.py` | Intermittent dosing and time-averaged knockdown, Figure 14 |
 | `code/14_trial_power.py` | Sample size and power for a real trial, Figure 15 |
+| `code/15_build_ieee.py` | Builds the IEEE two-column LaTeX source and PDF |
+| `code/16_build_ieee_docx.py` | Builds the IEEE two-column Word version |
 | `results/` | Every table in the paper, as CSV or JSON, written by the script that produced it |
 | `figures/` | All fifteen figures |
-| `dist/` | The paper as `.docx` and `.pdf` |
+| `dist/` | The paper as `.docx` and `.pdf`, plus the IEEE versions and `paper_ieee.tex` |
 
 ## Running it
 
@@ -40,15 +44,22 @@ python3 -m pip install numpy scipy matplotlib
 cd code
 for f in 01_*.py 02_*.py 03_*.py 04_*.py 05_*.py 06_*.py 07_*.py 08_*.py \
          10_*.py 11_*.py 12_*.py 13_*.py 14_*.py; do python3 "$f"; done
-python3 09_build_documents.py   # needs pandoc and LibreOffice
+python3 09_build_documents.py   # plain Word and PDF; needs pandoc and LibreOffice
+python3 15_build_ieee.py        # IEEE PDF; needs pdflatex and the IEEEtran class
+python3 16_build_ieee_docx.py   # IEEE Word; needs python-docx
 ```
 
 Total runtime is about forty minutes on a single core, most of it in the
 sensitivity analysis, which recalibrates the model 160 times. All random seeds
 are fixed, so the figures and tables regenerate exactly.
 
-Tested with Python 3, NumPy 2.5.3, SciPy 1.18.1, Matplotlib 3.11.2, pandoc 3.1.3
-and LibreOffice 24.2.7.2.
+Tested with Python 3, NumPy 2.5.3, SciPy 1.18.1, Matplotlib 3.11.2, pandoc 3.1.3,
+LibreOffice 24.2.7.2, python-docx 1.2.0 and TeX Live 2023 with `texlive-publishers`
+for the IEEEtran class.
+
+The IEEE build is not a reformat of the Word version. It renumbers the figures
+into order of first citation, as IEEE requires, and rewrites every in-text
+reference to match, so a figure called 11 in `paper.md` may print as Fig. 2.
 
 ## Provenance
 

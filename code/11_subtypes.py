@@ -146,6 +146,9 @@ ax[2].annotate("reported 1.15", xy=(ISPN_RATE_RATIO + 0.02, 0.5), fontsize=6.5)
 ax[2].set_xlabel("iSPN / dSPN expansion-rate ratio")
 ax[2].set_ylabel("iSPN depletion at 50% loss\n(percentage points)")
 ax[2].set_title("C  how big a difference is needed")
+# Each panel carries its own y-axis label, so the panels need room
+# between them.
+fig.subplots_adjust(wspace=0.38)
 fig.savefig(os.path.join(FIG, "fig12_subtypes.png"))
 plt.close(fig)
 print("\nwrote figure 12 and result tables")

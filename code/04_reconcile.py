@@ -187,6 +187,9 @@ ax[1].set_ylabel("surviving SPNs (%)")
 ax[1].set_xlim(0, 100)
 ax[1].set_title("B  bracketing models\n(bands: age at CAP 600)", fontsize=8.5)
 ax[1].legend(frameon=False, fontsize=6.5, loc="lower left")
+# The colour bar sits between the two panels, so the gap has to be wide
+# enough for its label and panel B's y-axis label to coexist.
+fig.subplots_adjust(wspace=0.55)
 fig.savefig(os.path.join(FIG, "fig5_reconciliation.png"))
 plt.close(fig)
 print("\nwrote figure 5 and result tables")
