@@ -503,6 +503,16 @@ PREAMBLE = r"""\documentclass[conference]{IEEEtran}
 \newlength{\colw}
 \graphicspath{{%s/}}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+%% IEEEtran hard-codes an em dash after the Abstract and Index Terms run-in
+%% heads. The rest of this paper uses no em dashes, so both heads are
+%% redefined to take a colon instead. Everything else about them is the
+%% class default for the two-column conference layout.
+\makeatletter
+\def\abstract{\normalfont\@IEEEabskeysecsize\bfseries
+  \textit{\abstractname:}\ \@IEEEgobbleleadPARNLSP}
+\def\IEEEkeywords{\normalfont\@IEEEabskeysecsize\bfseries
+  \textit{\IEEEkeywordsname:}\ \@IEEEgobbleleadPARNLSP}
+\makeatother
 \begin{document}
 
 \title{Somatic CAG-Repeat Expansion as a Druggable Rate Process in

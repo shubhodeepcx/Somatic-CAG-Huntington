@@ -105,6 +105,39 @@ for start in START_AGES:
                     "n_per_arm_80pct_power": (None if not np.isfinite(n)
                                               else int(np.ceil(n)))})
 
+# ---------------------------------------------------------------------------
+# The variance above counts only one source of between-subject difference: the
+# spread of inherited CAG lengths across the cohort. Real participants also
+# differ in the modifier genotypes of section 3.7, which move age at 25% loss
+# by more years than the CAG spread does, and that variation is absent from
+# the simulation. It enters the sample-size formula exactly as an extra
+# between-subject standard deviation, so its effect can be computed without
+# re-simulating anything.
+EXTRA_BETWEEN_SD = [0.0, 0.5, 1.0, 2.0]   # percentage points over the trial
+mod_rows = []
+for r in rows:
+    if (r["treatment_start_age"] != 40 or r["trial_duration_years"] != 3
+            or r["measurement_sd_points"] != 2.0):
+        continue
+    for extra in EXTRA_BETWEEN_SD:
+        sigma = float(np.sqrt(r["total_sd_points"] ** 2 + extra ** 2))
+        delta = r["effect_delta_points"]
+        n = 2 * Z ** 2 * sigma ** 2 / delta ** 2
+        mod_rows.append({
+            "arm": r["arm"],
+            "trial_duration_years": r["trial_duration_years"],
+            "treatment_start_age": r["treatment_start_age"],
+            "measurement_sd_points": r["measurement_sd_points"],
+            "extra_between_subject_sd_points": extra,
+            "total_sd_points": round(sigma, 2),
+            "n_per_arm_80pct_power": int(np.ceil(n))})
+
+print("\neffect of between-subject variation the model does not simulate "
+      "(modifier genotype), 3-year trial enrolling at 40, imaging SD 2")
+for r in mod_rows:
+    print(f"  {r['arm']:<40} extra SD {r['extra_between_subject_sd_points']:>4} "
+          f"-> n = {r['n_per_arm_80pct_power']}")
+
 print("sample size per arm, 80% power, alpha 0.05")
 for r in rows:
     if (r["arm"].startswith("29%") and r["measurement_sd_points"] == 2.0):
@@ -112,10 +145,12 @@ for r in rows:
               f"effect {r['effect_delta_points']:>5} pts, SD {r['total_sd_points']:>5}"
               f"  -> n = {r['n_per_arm_80pct_power']} per arm")
 
-with open(os.path.join(RES, "trial_power.csv"), "w", newline="") as f:
-    w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
-    w.writeheader()
-    w.writerows(rows)
+for name, rws in (("trial_power.csv", rows),
+                  ("modifier_variance_power.csv", mod_rows)):
+    with open(os.path.join(RES, name), "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(rws[0].keys()))
+        w.writeheader()
+        w.writerows(rws)
 
 fig, ax = plt.subplots(1, 3, figsize=(10.4, 2.95))
 

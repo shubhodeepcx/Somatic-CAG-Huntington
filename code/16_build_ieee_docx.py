@@ -340,10 +340,10 @@ def main():
     continuous(doc, 2)
 
     p = para(doc, space_after=6, indent=0.2)
-    run(p, "Abstract—", size=9, bold=True, italic=True)
+    run(p, "Abstract: ", size=9, bold=True, italic=True)
     run(p, ABSTRACT, size=9, bold=True)
     p = para(doc, space_after=10, indent=0.2)
-    run(p, "Index Terms—", size=9, bold=True, italic=True)
+    run(p, "Index Terms: ", size=9, bold=True, italic=True)
     run(p, INDEX_TERMS, size=9, bold=True)
 
     write_body(doc, body, figs, secs)

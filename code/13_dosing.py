@@ -37,7 +37,19 @@ plt.rcParams.update({"font.size": 9, "axes.spines.top": False,
                      "axes.spines.right": False, "figure.dpi": 160,
                      "savefig.bbox": "tight"})
 
-EC50, HILL = 10.12, 1.215     # fitted in script 05 (nmol/g, dimensionless)
+def _fitted_delivery_constants():
+    """Read EC50 and the Hill coefficient from the table script 05 wrote.
+
+    They are duplicated nowhere: hard-coding them here would let the two
+    scripts drift apart silently if the Emax fit were ever re-done.
+    """
+    path = os.path.join(RES, "delivery_constants.csv")
+    with open(path) as f:
+        vals = {r["constant"]: float(r["value"]) for r in csv.DictReader(f)}
+    return vals["EC50_nmol_per_g"], vals["Hill"]
+
+
+EC50, HILL = _fitted_delivery_constants()
 HALF_LIVES_M = [1, 2, 3, 6, 9, 12]        # months, tissue elimination
 INTERVALS_M = [3, 4, 6, 12]               # months between doses
 PEAK_EXPOSURES = [10.12, 25.0, 61.8]      # nmol/g: 50, 75 and 90% peak knockdown

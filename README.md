@@ -59,9 +59,13 @@ Tested with Python 3, NumPy 2.5.3, SciPy 1.18.1, Matplotlib 3.11.2, pandoc 3.1.3
 LibreOffice 24.2.7.2, python-docx 1.2.0 and TeX Live 2023 with `texlive-publishers`
 for the IEEEtran class.
 
-`review/` carries an internal audit of this work and a log of what was done
-about each finding. It is kept in the repository rather than discarded because
-two of the findings changed results, and the second of them is worth knowing
+`review/` carries two internal audits of this work and a log of what was done
+about each finding. The second pass (`audit_pass2_2026-10-12.md`) traced every
+number in the paper back to the result table it came from and found nine
+things, of which the depth-scaling figures in section 3.8 and the
+enrolment-age direction in section 3.12 were outright wrong. Both audits are
+kept in the repository rather than discarded because two of the first pass's
+findings changed results, and the second of those is worth knowing
 about before reading the paper: calibration minimises a mean-field integral
 whose stochastic counterpart runs 21 to 50% slower, and section 3.5 reports
 what refitting against the right quantity does to each conclusion.

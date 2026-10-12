@@ -114,14 +114,45 @@ GRADIENT = 10.0            # "more than an order of magnitude" lower in deep bra
 Lpen_mm = (DEPTH_PUTAMEN_MM - DEPTH_CORTEX_MM) / np.log(GRADIENT)
 print(f"\nimplied tissue penetration length Lpen = {Lpen_mm:.2f} mm")
 
-# For the human brain the same penetration length must cover a greater depth.
-# Depths are assumed to scale with the cube root of brain mass (macaque ~ 90 g,
-# human ~ 1300 g), so the human putamen sits proportionally further from CSF.
+# For the human brain the same penetration length must cover a greater depth,
+# and how much greater is the dominant uncertainty in this whole calculation.
+# Two ways of putting a number on it disagree, so both are reported rather
+# than one being chosen silently.
+#
+#   (a) geometric scaling: linear dimensions go as the cube root of brain
+#       mass (macaque ~90 g, human ~1300 g), giving a factor of 2.4. That is
+#       almost certainly an overestimate, because the putamen does not sit at
+#       a fixed fraction of brain radius and the human lateral ventricle runs
+#       alongside it.
+#   (b) anatomy: the human putamen lies roughly 12 to 20 mm from the nearest
+#       CSF surface depending on which surface is counted and where in the
+#       structure. These are assumed round numbers, not measurements.
+#
+# Attenuation is exp(-(depth - depth_macaque) / Lpen) in every case.
 MACAQUE_BRAIN_G = 90.0   # assumed
-depth_human_mm = DEPTH_PUTAMEN_MM * (SCALE["human_brain_g"] / MACAQUE_BRAIN_G) ** (1 / 3)
+depth_cuberoot_mm = DEPTH_PUTAMEN_MM * (SCALE["human_brain_g"] / MACAQUE_BRAIN_G) ** (1 / 3)
+HUMAN_DEPTHS_MM = [12.0, 16.0, 20.0, round(depth_cuberoot_mm, 1)]
+
+depth_rows = []
+for d in HUMAN_DEPTHS_MM:
+    att = float(np.exp(-(d - DEPTH_PUTAMEN_MM) / Lpen_mm))
+    depth_rows.append({
+        "assumed_human_putamen_depth_mm": d,
+        "basis": ("cube-root scaling of brain mass" if abs(d - depth_cuberoot_mm) < 0.05
+                  else "assumed anatomical depth"),
+        "penetration_length_mm": round(Lpen_mm, 2),
+        "extra_attenuation_vs_macaque": round(att, 4),
+        "fold_worse_than_macaque": round(1.0 / att, 1)})
+
+print(f"\nhuman putamen depth scenarios (macaque reference {DEPTH_PUTAMEN_MM:.0f} mm, "
+      f"Lpen {Lpen_mm:.2f} mm)")
+for r in depth_rows:
+    print(f"  {r['assumed_human_putamen_depth_mm']:>5} mm "
+          f"({r['basis']:<34}) -> x{r['fold_worse_than_macaque']} worse")
+
+# The headline figure quoted in the paper is the middle anatomical scenario.
+depth_human_mm = 16.0
 extra_attenuation = float(np.exp(-(depth_human_mm - DEPTH_PUTAMEN_MM) / Lpen_mm))
-print(f"macaque->human putamen depth {DEPTH_PUTAMEN_MM:.1f} -> "
-      f"{depth_human_mm:.1f} mm; extra attenuation x{extra_attenuation:.3g}")
 
 # ------------------------------------------------- Route B: RMT nanocarrier
 # Transcytosis efficiency as a function of anti-TfR affinity and valency:
@@ -206,6 +237,7 @@ def _write(name, rws, fields):
 
 
 _write("emax_fit.csv", emax_rows, list(emax_rows[0].keys()))
+_write("depth_attenuation.csv", depth_rows, list(depth_rows[0].keys()))
 _write("route_comparison.csv", routeA + routeB,
        ["route", "region", "design", "target_MSH3_pct",
         "achieved_knockdown_pct", "implied_tissue_exposure_nmol_per_g",

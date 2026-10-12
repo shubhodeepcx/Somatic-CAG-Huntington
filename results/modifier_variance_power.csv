@@ -1,0 +1,13 @@
+arm,trial_duration_years,treatment_start_age,measurement_sd_points,extra_between_subject_sd_points,total_sd_points,n_per_arm_80pct_power
+29% knockdown (measured achievable),3,40,2.0,0.0,2.96,133
+29% knockdown (measured achievable),3,40,2.0,0.5,3.0,136
+29% knockdown (measured achievable),3,40,2.0,1.0,3.12,148
+29% knockdown (measured achievable),3,40,2.0,2.0,3.57,193
+55% knockdown (best caudate figure),3,40,2.0,0.0,2.94,47
+55% knockdown (best caudate figure),3,40,2.0,0.5,2.98,48
+55% knockdown (best caudate figure),3,40,2.0,1.0,3.11,52
+55% knockdown (best caudate figure),3,40,2.0,2.0,3.56,68
+75% knockdown (aspirational),3,40,2.0,0.0,2.93,28
+75% knockdown (aspirational),3,40,2.0,0.5,2.97,29
+75% knockdown (aspirational),3,40,2.0,1.0,3.1,32
+75% knockdown (aspirational),3,40,2.0,2.0,3.55,41

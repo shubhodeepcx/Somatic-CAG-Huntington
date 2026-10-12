@@ -20,8 +20,20 @@ import hdmodel as hd
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, "..", "results")
 
-# fitted in script 05
-EC50, HILL = 10.12, 1.215
+
+def _fitted_delivery_constants():
+    """Read EC50 and the Hill coefficient from the table script 05 wrote.
+
+    They are duplicated nowhere: hard-coding them here would let the two
+    scripts drift apart silently if the Emax fit were ever re-done.
+    """
+    path = os.path.join(RES, "delivery_constants.csv")
+    with open(path) as f:
+        vals = {r["constant"]: float(r["value"]) for r in csv.DictReader(f)}
+    return vals["EC50_nmol_per_g"], vals["Hill"]
+
+
+EC50, HILL = _fitted_delivery_constants()
 STRIATUM_G = 20.0
 BODY_KG = 70.0
 ESCAPE = 0.02              # assumed endosomal escape fraction

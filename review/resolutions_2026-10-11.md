@@ -160,7 +160,14 @@ than asserted.
 ## One correction to the audit itself
 
 A1 says the exposure-response curve is used at steady-state peaks up to
-157 nmol g⁻¹ in the dosing analysis. The actual maximum in
-`results/dosing_timeaverage.csv` is 388 nmol g⁻¹, which is fifteen times the
-highest calibration point rather than six. The paper states the larger figure.
-C5 was also wrong, as noted above.
+157 nmol g⁻¹ in the dosing analysis. That is right for the schedule the paper
+headlines, the 75% peak-knockdown regimen. Across the whole grid in
+`results/dosing_timeaverage.csv`, which includes a 90% target, the maximum is
+388 nmol g⁻¹, fifteen times the highest calibration point rather than six. Both
+figures are correct about different subsets of the grid, so A1 was not an
+error; the paper now states the larger one, because the extrapolation
+limitation should be stated against the worst case in the analysis rather than
+against the headline case.
+
+C5 was wrong, as noted above: the `tot <= 0` branch is reachable at complete
+MSH3 ablation, so it was documented rather than deleted.
