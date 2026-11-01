@@ -34,9 +34,11 @@ conference format, alongside the LaTeX source that produced it.
 | `code/15_build_ieee.py` | Builds the IEEE two-column LaTeX source and PDF |
 | `code/16_build_ieee_docx.py` | Builds the IEEE two-column Word version |
 | `code/17_estimator.py` | Mean-field against stochastic calibration, section 3.5 |
-| `review/` | An internal audit of the model, the code and the paper, and what was done about each finding |
+| `code/18_anchor_correlation.py` | Correlated calibration anchors, section 3.15, Figure 16 |
+| `code/19_exposure_response_band.py` | Hill profile and the delivery band, section 3.14, Figure 17 |
+| `review/` | Three dated internal audit passes over the model, the code and the paper, with what was done about each finding |
 | `results/` | Every table in the paper, as CSV or JSON, written by the script that produced it |
-| `figures/` | All fifteen figures |
+| `figures/` | All seventeen figures |
 | `dist/` | The paper as `.docx` and `.pdf`, plus the IEEE versions and `paper_ieee.tex` |
 
 ## Running it
@@ -45,15 +47,15 @@ conference format, alongside the LaTeX source that produced it.
 python3 -m pip install numpy scipy matplotlib
 cd code
 for f in 01_*.py 02_*.py 03_*.py 04_*.py 05_*.py 06_*.py 07_*.py 08_*.py \
-         10_*.py 11_*.py 12_*.py 13_*.py 14_*.py 17_*.py; do python3 "$f"; done
+         10_*.py 11_*.py 12_*.py 13_*.py 14_*.py 17_*.py 18_*.py 19_*.py; do python3 "$f"; done
 python3 09_build_documents.py   # plain Word and PDF; needs pandoc and LibreOffice
 python3 15_build_ieee.py        # IEEE PDF; needs pdflatex and the IEEEtran class
 python3 16_build_ieee_docx.py   # IEEE Word; needs python-docx
 ```
 
-Total runtime is about forty minutes on a single core, most of it in the
-sensitivity analysis, which recalibrates the model 160 times. All random seeds
-are fixed, so the figures and tables regenerate exactly.
+Total runtime is about seventy minutes on a single core, most of it in the two
+sensitivity analyses, which between them recalibrate the model 640 times. All
+random seeds are fixed, so the figures and tables regenerate exactly.
 
 Tested with Python 3, NumPy 2.5.3, SciPy 1.18.1, Matplotlib 3.11.2, pandoc 3.1.3,
 LibreOffice 24.2.7.2, python-docx 1.2.0 and TeX Live 2023 with `texlive-publishers`

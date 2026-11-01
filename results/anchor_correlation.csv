@@ -1,0 +1,10 @@
+latent_rho,realised_spearman_coupled,outcome,n_usable,median,p2.5,p97.5,central95_width,min,benefit_positive_in_all_samples
+0.0,-0.053,untreated SPN loss at 70 (%),160,38.37,19.8,56.74,36.94,8.5,
+0.0,-0.053,treated SPN loss at 70 (%),160,26.45,10.46,40.08,29.62,5.2,
+0.0,-0.053,absolute benefit (percentage points),160,11.48,6.42,21.2,14.79,3.0,True
+0.5,0.424,untreated SPN loss at 70 (%),160,39.08,18.79,63.4,44.61,6.13,
+0.5,0.424,treated SPN loss at 70 (%),160,27.23,10.23,45.74,35.51,2.8,
+0.5,0.424,absolute benefit (percentage points),160,11.43,6.16,19.79,13.63,3.33,True
+0.9,0.859,untreated SPN loss at 70 (%),160,39.88,18.01,66.67,48.66,5.43,
+0.9,0.859,treated SPN loss at 70 (%),160,27.93,10.41,48.02,37.61,2.63,
+0.9,0.859,absolute benefit (percentage points),160,11.45,6.06,20.79,14.73,2.8,True

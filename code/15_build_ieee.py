@@ -183,7 +183,8 @@ COMPOUND = [
 SINGLE = {
     "\u03b1": "$\\alpha$", "\u03b2": "$\\beta$", "\u03b3": "$\\gamma$",
     "\u03b4": "$\\delta$", "\u03b7": "$\\eta$", "\u03b8": "$\\theta$",
-    "\u03bb": "$\\lambda$", "\u03c3": "$\\sigma$", "\u03c6": "$\\varphi$",
+    "\u03bb": "$\\lambda$", "\u03c1": "$\\rho$", "\u03c3": "$\\sigma$",
+    "\u03c6": "$\\varphi$",
     "\u0394": "$\\Delta$",
     "\u2212": "$-$", "\u00d7": "$\\times$", "\u00b1": "$\\pm$",
     "\u221a": "$\\sqrt{\\ }$", "\u222b": "$\\int$",
